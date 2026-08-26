@@ -1,71 +1,61 @@
 import { callClaudeJSON } from '../llm';
-import { fetchArxivPaper } from '../tools/arxiv';
-import { fetchReferences } from '../tools/semanticScholar';
 
-export interface LearningNode {
+export interface DiligenceGate {
   order: number;
+  tier: 'Tier 1: Corporate & Legal' | 'Tier 2: Cyber & InfoSec' | 'Tier 3: Financial & Payouts' | 'Tier 4: Contractual & SLA';
   title: string;
-  arxivId: string | null;
+  entityOrDocId: string | null;
   whyItMatters: string;
-  comprehensionGate: string;
-  reimplementationTask: string;
+  verificationGate: string;
+  remediationDeliverable: string;
+  riskWeight: number; // 0-100
 }
 
-export interface LearningPath {
-  targetTitle: string;
-  targetArxivId: string;
-  nodes: LearningNode[];
+export type LearningNode = DiligenceGate;
+
+export interface DiligenceTrail {
+  targetVendor: string;
+  targetDomainOrGstin: string;
+  overallRiskTier: 'Low' | 'Medium' | 'High' | 'Critical';
+  diligenceScore: number; // 0-100
+  nodes: DiligenceGate[];
 }
 
-const SYSTEM = `You are the Curriculum Agent. Given a target paper and candidate cited papers, build a BACKWARD citation learning path: the prerequisite papers a student should study, ordered most-foundational first to most-advanced last. Select ONLY the references actually necessary to understand the target — not all of them.
+export type LearningPath = DiligenceTrail;
+
+const SYSTEM = `You are the Due Diligence Agent for Razorpay RiskOS (Track 2: AI Risk Manager).
+Given a target vendor, merchant domain, or GSTIN, generate a comprehensive 4-Tier Due Diligence Verification Trail:
+- Tier 1: Corporate & Legal Structure (MCA-21 active filings, GSTIN cadence, UBO ultimate beneficial ownership, CIN registration).
+- Tier 2: Cyber & InfoSec Posture (SOC2 Type II report scope, ISO 27001, AWS/GCP subprocessor telemetry, 72h CERT-In compliance).
+- Tier 3: Financial & Payout Health (RazorpayX settlement integrity, cash runway, chargeback ratios, escrow/reserve hold requirements).
+- Tier 4: Contractual SLA & Indemnification (MSA aggregate liability caps, DPDP 2023 data localization, IP indemnity exclusions, subprocessor change notification window).
 
 For each node provide:
-- whyItMatters: 1-2 specific sentences on what concept this paper contributes to understanding the target paper.
-- comprehensionGate: ONE understanding question answerable from the paper's abstract. Never a recall question like "what is the title".
-- reimplementationTask: a coding task scoped to a few hours that implements that paper's key mechanism in isolation.
+- tier: the exact tier name.
+- title: concise title of the verification checkpoint.
+- entityOrDocId: identifier (e.g. GSTIN, MCA CIN, SOC2 Hash, or MSA-SEC-14).
+- whyItMatters: 1-2 specific sentences on why this checkpoint is critical to preventing financial/compliance default.
+- verificationGate: ONE strict verification test or audit question.
+- remediationDeliverable: the mandatory contractual rider, escrow trigger, or cert required to pass.
+- riskWeight: integer from 10 to 30.
 
 Respond ONLY with JSON matching:
-{ "targetTitle": string, "targetArxivId": string, "nodes": [{ "order": number, "title": string, "arxivId": string | null, "whyItMatters": string, "comprehensionGate": string, "reimplementationTask": string }] }`;
+{
+  "targetVendor": string,
+  "targetDomainOrGstin": string,
+  "overallRiskTier": "Low" | "Medium" | "High" | "Critical",
+  "diligenceScore": number,
+  "nodes": [{ "order": number, "tier": "Tier 1: Corporate & Legal" | "Tier 2: Cyber & InfoSec" | "Tier 3: Financial & Payouts" | "Tier 4: Contractual & SLA", "title": string, "entityOrDocId": string | null, "whyItMatters": string, "verificationGate": string, "remediationDeliverable": string, "riskWeight": number }]
+}`;
 
-export async function buildLearningPath(arxivUrlOrId: string): Promise<LearningPath> {
-  const paper = await fetchArxivPaper(arxivUrlOrId);
-  const refs = await fetchReferences(paper.arxivId, 10);
+export async function buildLearningPath(vendorQuery: string): Promise<DiligenceTrail> {
+  const user = `VENDOR INTAKE QUERY: ${vendorQuery}
 
-  if (refs.length === 0) {
-    return {
-      targetTitle: paper.title,
-      targetArxivId: paper.arxivId,
-      nodes: [
-        {
-          order: 1,
-          title: paper.title,
-          arxivId: paper.arxivId,
-          whyItMatters:
-            'No usable cited references were found, so the path starts directly at the target paper itself.',
-          comprehensionGate:
-            'Based on the abstract, what problem does this paper address and what is its core proposed approach?',
-          reimplementationTask:
-            'Implement a minimal toy version of the core mechanism described in the abstract, on synthetic data.',
-        },
-      ],
-    };
-  }
+Generate a structured 4-Tier Due Diligence Verification Trail with 4 to 8 critical verification gates across Corporate, Cyber, Payout, and Contractual compliance.`;
 
-  const user = `TARGET PAPER
-Title: ${paper.title}
-Abstract: ${paper.summary}
-
-CANDIDATE CITED PAPERS
-${refs
-  .map(
-    (r, i) =>
-      `${i + 1}. ${r.title} (${r.year ?? 'year unknown'}, arxivId: ${r.arxivId ?? 'none'})
-Abstract: ${r.abstract}`
-  )
-  .join('\n\n')}`;
-
-  const path = await callClaudeJSON<LearningPath>({ system: SYSTEM, user, maxTokens: 4000 });
-  path.targetTitle = paper.title;
-  path.targetArxivId = paper.arxivId;
-  return path;
+  const trail = await callClaudeJSON<DiligenceTrail>({ system: SYSTEM, user, maxTokens: 4000 });
+  trail.targetVendor = trail.targetVendor || vendorQuery;
+  trail.targetDomainOrGstin = trail.targetDomainOrGstin || vendorQuery;
+  return trail;
 }
+
