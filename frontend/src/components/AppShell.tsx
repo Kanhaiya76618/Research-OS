@@ -1,7 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 import TopNav from './TopNav';
+import Sidebar from './Sidebar';
 import Dock from './Dock';
 import HelpAssistant from './HelpAssistant';
 import StudyTools from './StudyTools';
@@ -14,9 +15,11 @@ interface AppShellProps {
 }
 
 export default function AppShell({ children, topic, agentStatus = 'idle', bouncingDockItem }: AppShellProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   return (
     <div
-      className="flex flex-col h-screen w-full overflow-hidden"
+      className="flex h-screen w-full overflow-hidden"
       style={{
         background: 'linear-gradient(145deg, #f8fafc 0%, #edf2f7 35%, #f1f5f9 70%, #e2e8f0 100%)',
       }}
@@ -46,24 +49,34 @@ export default function AppShell({ children, topic, agentStatus = 'idle', bounci
         />
       </div>
 
-      {/* Top nav */}
-      <div className="relative z-40">
-        <TopNav topic={topic} agentStatus={agentStatus} />
+      {/* Left Collapsible & Toggleable Sidebar */}
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((v) => !v)}
+      />
+
+      {/* Main View Container */}
+      <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden relative">
+        {/* Top Navigation Bar */}
+        <TopNav
+          topic={topic}
+          agentStatus={agentStatus}
+        />
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto scrollbar-thin relative z-10 pb-24">
+          {children}
+        </main>
+
+        {/* Floating macOS Dock */}
+        <Dock bouncingItem={bouncingDockItem} />
+
+        {/* Floating AI Help Assistant */}
+        <HelpAssistant />
+
+        {/* Floating Study / Audit Tools */}
+        <StudyTools />
       </div>
-
-      {/* Main content */}
-      <main className="flex-1 overflow-y-auto scrollbar-thin relative z-10 pb-24">
-        {children}
-      </main>
-
-      {/* Bottom Dock */}
-      <Dock bouncingItem={bouncingDockItem} />
-
-      {/* Help assistant */}
-      <HelpAssistant />
-
-      {/* Study tools */}
-      <StudyTools />
     </div>
   );
 }
