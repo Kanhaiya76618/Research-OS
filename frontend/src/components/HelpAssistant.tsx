@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, Send, Info, MessageCircle, ArrowRight } from 'lucide-react';
-import { MOCK_AGENTS, MOCK_ASSISTANT_QA, ASSISTANT_FALLBACK } from '@/lib/mock/data'; // TODO(mock): no backend endpoint provides this data yet
+import { Sparkles, X, Send, Info, MessageCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { MOCK_AGENTS, MOCK_ASSISTANT_QA, ASSISTANT_FALLBACK } from '@/lib/mock/data';
 
 type Tab = 'assistant' | 'about';
 
@@ -26,7 +26,7 @@ function matchAssistantAnswer(input: string): string {
 
 function AssistantTab() {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 'm0', role: 'assistant', text: "Hi, I'm the ResearchOS Assistant. Ask me how something works, or pick a question below." },
+    { id: 'm0', role: 'assistant', text: "Hi! I'm the RiskOS Copilot. Ask me anything about vendor risk, compliance checks, red-flag auditing, or the 3-skeptic committee." },
   ]);
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
@@ -49,7 +49,7 @@ function AssistantTab() {
         ...prev,
         { id: `a-${Date.now()}`, role: 'assistant', text: matchAssistantAnswer(trimmed) },
       ]);
-    }, 500);
+    }, 400);
   };
 
   return (
@@ -61,8 +61,8 @@ function AssistantTab() {
               className="max-w-[85%] rounded-xl px-3 py-2 text-xs leading-relaxed"
               style={
                 m.role === 'user'
-                  ? { background: '#4f46e5', color: 'white' }
-                  : { background: 'rgba(0,0,0,0.05)', color: '#1d1d1f' }
+                  ? { background: 'linear-gradient(135deg, #0284c7, #1e3a8a)', color: 'white' }
+                  : { background: 'rgba(2, 132, 199, 0.06)', color: '#0c2340', border: '1px solid rgba(2, 132, 199, 0.12)' }
               }
             >
               {m.text}
@@ -71,13 +71,12 @@ function AssistantTab() {
         ))}
         {thinking && (
           <div className="flex justify-start">
-            <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(0,0,0,0.05)' }}>
+            <div className="rounded-xl px-3 py-2 bg-slate-100">
               <div className="flex items-center gap-1">
                 {[0, 1, 2].map((i) => (
                   <motion.div
                     key={i}
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: '#6e6e73' }}
+                    className="w-1.5 h-1.5 rounded-full bg-[#0284c7]"
                     animate={{ opacity: [0.3, 1, 0.3] }}
                     transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
                   />
@@ -94,7 +93,7 @@ function AssistantTab() {
             <button
               key={qa.id}
               onClick={() => send(qa.question)}
-              className="text-[10px] px-2 py-1 rounded-full bg-black/5 hover:bg-black/8 text-[#4f46e5] transition-colors duration-150"
+              className="text-[10px] px-2 py-1 rounded-full bg-[#0284c7]/10 hover:bg-[#0284c7]/20 text-[#0284c7] font-semibold transition-colors duration-150"
             >
               {qa.question}
             </button>
@@ -112,14 +111,14 @@ function AssistantTab() {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about ResearchOS…"
-          aria-label="Ask the ResearchOS assistant"
-          className="flex-1 text-xs px-3 py-2 rounded-lg bg-black/5 outline-none focus:ring-1 focus:ring-[#4f46e5]/40 text-[#1d1d1f] placeholder:text-[#9a9a9e]"
+          placeholder="Ask RiskOS Copilot…"
+          aria-label="Ask the RiskOS copilot"
+          className="flex-1 text-xs px-3 py-2 rounded-lg bg-slate-100 outline-none focus:ring-1 focus:ring-[#0284c7]/40 text-[#0c2340] placeholder:text-[#94a3b8]"
         />
         <button
           type="submit"
           aria-label="Send"
-          className="p-2 rounded-lg bg-[#4f46e5] text-white hover:bg-[#433add] transition-colors duration-150 disabled:opacity-40"
+          className="clay-btn-primary p-2 rounded-lg text-white disabled:opacity-40"
           disabled={!input.trim()}
         >
           <Send size={13} />
@@ -132,14 +131,16 @@ function AssistantTab() {
 function AboutTab() {
   return (
     <div className="overflow-y-auto scrollbar-thin px-4 py-4 h-full">
-      <p className="text-xs leading-relaxed text-[#3a3a3d] mb-4">
-        ResearchOS turns any research topic into a structured, critiqued curriculum — automatically
-        fetching literature, sequencing it into a reading path, mapping it as a knowledge graph, and
-        auditing it for gaps and contradictions.
+      <div className="flex items-center gap-2 mb-2">
+        <ShieldCheck size={16} className="text-[#0284c7]" />
+        <span className="text-xs font-bold text-[#0c2340]">RiskOS — Track 2: AI Risk Manager</span>
+      </div>
+      <p className="text-xs leading-relaxed text-[#475569] mb-4">
+        Autonomous multi-agent risk intelligence platform built for Razorpay. Analyzes counterparty disclosures, verifies MCA & GSTIN standing, audits contracts for liability red flags, and defends pre-flight onboarding before a 3-skeptic committee.
       </p>
 
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-[#6e6e73] mb-3">
-        Multi-Agent System
+      <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b] mb-3">
+        Multi-Agent Risk Architecture
       </p>
 
       <div className="space-y-2">
@@ -149,31 +150,27 @@ function AboutTab() {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.06, type: 'spring', stiffness: 300, damping: 30 }}
-              className="flex items-start gap-3 rounded-xl p-3"
-              style={{
-                background: 'rgba(255,255,255,0.6)',
-                border: `1px solid ${agent.color}25`,
-              }}
+              className="flex items-start gap-3 rounded-xl p-2.5 bg-white/70 border border-slate-200"
             >
               <div
-                className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 font-mono text-[10px] font-bold"
+                className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-mono text-[10px] font-bold"
                 style={{ background: `${agent.color}18`, color: agent.color }}
               >
-                {agent.stage}
+                0{agent.stage}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <p className="text-xs font-semibold text-[#1d1d1f]">{agent.name}</p>
-                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full" style={{ background: `${agent.color}15`, color: agent.color }}>
+                  <p className="text-xs font-bold text-[#0c2340]">{agent.name}</p>
+                  <span className="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded-full" style={{ background: `${agent.color}15`, color: agent.color }}>
                     {agent.role}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#6e6e73] mt-0.5 leading-snug">{agent.description}</p>
+                <p className="text-[11px] text-[#64748b] mt-0.5 leading-snug">{agent.description}</p>
               </div>
             </motion.div>
             {i < MOCK_AGENTS.length - 1 && (
               <div className="flex justify-center">
-                <ArrowRight size={12} className="text-black/20 rotate-90" />
+                <ArrowRight size={10} className="text-[#94a3b8] rotate-90" />
               </div>
             )}
           </React.Fragment>
@@ -202,49 +199,46 @@ export default function HelpAssistant() {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="ResearchOS assistant"
+            aria-label="RiskOS Copilot"
             initial={{ opacity: 0, y: 16, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-            className="absolute bottom-14 left-0 w-80 max-w-[calc(100vw-2rem)] h-[26rem] max-h-[70vh] rounded-2xl overflow-hidden flex flex-col"
+            className="absolute bottom-14 left-0 w-80 max-w-[calc(100vw-2rem)] h-[26rem] max-h-[70vh] rounded-2xl overflow-hidden flex flex-col clay-card"
             style={{
-              background: 'rgba(255,255,255,0.9)',
-              backdropFilter: 'blur(32px) saturate(2)',
-              WebkitBackdropFilter: 'blur(32px) saturate(2)',
-              border: '1px solid rgba(255,255,255,0.9)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,1)',
+              background: 'rgba(255, 255, 255, 0.94)',
+              boxShadow: '0 20px 60px rgba(12, 35, 64, 0.2), inset 0 1px 0 rgba(255,255,255,1)',
             }}
           >
-            <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0">
-              <div className="flex items-center gap-1 rounded-lg bg-black/5 p-0.5">
+            <div className="flex items-center justify-between px-3 pt-3 pb-2 shrink-0 border-b border-black/6">
+              <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-0.5">
                 <button
                   onClick={() => setTab('assistant')}
                   aria-pressed={tab === 'assistant'}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150"
-                  style={tab === 'assistant' ? { background: 'white', color: '#1d1d1f', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' } : { color: '#6e6e73' }}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold transition-all duration-150"
+                  style={tab === 'assistant' ? { background: 'white', color: '#0c2340', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { color: '#64748b' }}
                 >
-                  <MessageCircle size={11} /> Assistant
+                  <MessageCircle size={11} /> Copilot
                 </button>
                 <button
                   onClick={() => setTab('about')}
                   aria-pressed={tab === 'about'}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150"
-                  style={tab === 'about' ? { background: 'white', color: '#1d1d1f', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' } : { color: '#6e6e73' }}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold transition-all duration-150"
+                  style={tab === 'about' ? { background: 'white', color: '#0c2340', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { color: '#64748b' }}
                 >
-                  <Info size={11} /> About
+                  <Info size={11} /> Swarm
                 </button>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close assistant"
-                className="p-1 rounded-md text-[#6e6e73] hover:text-[#1d1d1f] hover:bg-black/5 transition-colors duration-150"
+                className="p-1 rounded-md text-[#64748b] hover:text-[#0c2340] hover:bg-black/5 transition-colors duration-150"
               >
                 <X size={14} />
               </button>
             </div>
 
-            <div className="flex-1 min-h-0 border-t border-black/6">
+            <div className="flex-1 min-h-0">
               {tab === 'assistant' ? <AssistantTab /> : <AboutTab />}
             </div>
           </motion.div>
@@ -253,21 +247,21 @@ export default function HelpAssistant() {
 
       <motion.button
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Close ResearchOS assistant' : 'Open ResearchOS assistant'}
+        aria-label={open ? 'Close RiskOS Copilot' : 'Open RiskOS Copilot'}
         aria-expanded={open}
         whileHover={{ scale: 1.08, y: -2 }}
         whileTap={{ scale: 0.95 }}
-        className="w-11 h-11 rounded-full flex items-center justify-center"
+        className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg"
         style={{
-          background: open ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : 'rgba(255,255,255,0.8)',
+          background: open ? 'linear-gradient(135deg, #0284c7, #1e3a8a)' : 'rgba(255,255,255,0.92)',
           backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: open ? 'none' : '1px solid rgba(0,0,0,0.08)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
+          border: open ? 'none' : '1px solid rgba(2, 132, 199, 0.2)',
+          boxShadow: '0 4px 16px rgba(12, 35, 64, 0.12)',
         }}
       >
-        <Sparkles size={18} color={open ? 'white' : '#4f46e5'} />
+        <Sparkles size={18} color={open ? 'white' : '#0284c7'} />
       </motion.button>
     </div>
   );
 }
+

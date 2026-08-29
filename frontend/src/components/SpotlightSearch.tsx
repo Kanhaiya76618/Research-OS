@@ -4,9 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Search, FileText, Layers, StickyNote, FolderOpen, ArrowRight } from 'lucide-react';
 import { MOCK_SEARCH_RESULTS, type SearchResult } from '@/lib/mock/data'; // TODO(mock): no backend endpoint provides this data yet
-import Icon from '@/components/ui/AppIcon';
-
-
 interface SpotlightSearchProps {
   open: boolean;
   onClose: () => void;
@@ -20,10 +17,10 @@ const TYPE_ICONS: Record<SearchResult['type'], React.ComponentType<{ size?: numb
 };
 
 const TYPE_COLORS: Record<SearchResult['type'], string> = {
-  paper: '#4f46e5',
-  topic: '#0d9488',
-  note: '#d97706',
-  workspace: '#7c3aed',
+  paper: '#0284c7',
+  topic: '#1e3a8a',
+  note: '#059669',
+  workspace: '#0c2340',
 };
 
 export default function SpotlightSearch({ open, onClose }: SpotlightSearchProps) {
