@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: riskos-backend
+    restart: unless-stopped
+    ports:
+      - "4029:4029"
+    environment:
+      - NODE_ENV=production
+      - PORT=4029
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GROK_API_KEY=${GROK_API_KEY:-}
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - FRONTEND_URL=http://localhost:4028
+    networks:
+      - riskos-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: riskos-frontend
+    restart: unless-stopped
+    ports:
+      - "4028:4028"
+      - "3000:4028"
+    environment:
+      - NODE_ENV=production
+      - PORT=4028
+      - BACKEND_URL=http://backend:4029
+    depends_on:
+      - backend
+    networks:
+      - riskos-network
+
+networks:
+  riskos-network:
+    driver: bridge

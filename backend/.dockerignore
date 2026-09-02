@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+*.safetensors
+*.zip
+*.bin
+__pycache__
+*.pyc
+coverage
+.env.local
+.DS_Store
