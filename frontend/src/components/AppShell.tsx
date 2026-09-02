@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 
 import TopNav from './TopNav';
 import Sidebar from './Sidebar';
+import Dock from './Dock';
 import HelpAssistant from './HelpAssistant';
+import StudyTools from './StudyTools';
 
 interface AppShellProps {
   children: React.ReactNode;
   topic?: string;
   agentStatus?: 'idle' | 'running' | 'done' | 'error';
+  bouncingDockItem?: string;
 }
 
-export default function AppShell({ children, topic, agentStatus = 'idle' }: AppShellProps) {
+export default function AppShell({ children, topic, agentStatus = 'idle', bouncingDockItem }: AppShellProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -61,14 +64,19 @@ export default function AppShell({ children, topic, agentStatus = 'idle' }: AppS
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin relative z-10 pb-8">
+        <main className="flex-1 overflow-y-auto scrollbar-thin relative z-10 pb-24">
           {children}
         </main>
 
-        {/* Floating AI Copilot Assistant */}
+        {/* Floating macOS Dock */}
+        <Dock bouncingItem={bouncingDockItem} />
+
+        {/* Floating AI Help Assistant */}
         <HelpAssistant />
+
+        {/* Floating Study / Audit Tools */}
+        <StudyTools />
       </div>
     </div>
   );
 }
-

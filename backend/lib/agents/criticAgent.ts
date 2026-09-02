@@ -1,5 +1,6 @@
 import { callClaudeJSON } from '../llm';
 import { getStudentContext } from '../orchestrator/knowledgeGraph';
+import { queryGraphRAG } from '../rag/ragPipeline';
 
 export type RedFlagCategory = 'unverified_cert' | 'liability_evasion' | 'subprocessor_risk' | 'regulatory_gap';
 export type FlagType = RedFlagCategory;
@@ -52,7 +53,20 @@ Respond ONLY with JSON matching:
 
 export async function critiqueDraft(contractText: string, vendorOrStudentId: string): Promise<ContractAuditResult> {
   const context = getStudentContext(vendorOrStudentId);
+  
+  // Query GraphRAG for relevant statutory mandates & entity relations
+  let ragContext = '';
+  try {
+    const ragResult = await queryGraphRAG(contractText.slice(0, 400), { vendorId: vendorOrStudentId });
+    ragContext = ragResult.synthesizedContext;
+  } catch (err) {
+    ragContext = '(GraphRAG offline, proceeding with standard knowledge)';
+  }
+
   const user = `INSTITUTIONAL RISK CONTEXT: ${context}
+
+GRAPHRAG REGULATORY & SUPPLY CHAIN INTEL:
+${ragContext}
 
 VENDOR CONTRACT TEXT FOR AUDIT:
 ${contractText}`;

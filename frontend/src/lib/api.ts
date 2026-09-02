@@ -161,3 +161,76 @@ export async function downloadReportPdf(studentId: string): Promise<Blob> {
 export function emailReport(studentId: string, email: string): Promise<{ sent: boolean; id: string | null }> {
   return post<{ sent: boolean; id: string | null }>('/api/report/email', { studentId, email });
 }
+
+export interface GraphRAGResult {
+  query: string;
+  synthesizedContext: string;
+  confidenceScore: number;
+  retrievedChunks: Array<{
+    chunk: {
+      documentTitle: string;
+      sourceType: string;
+      content: string;
+    };
+    score: number;
+    matchType: string;
+  }>;
+  graphEntities: Array<{
+    id: string;
+    label: string;
+    type: string;
+    riskWeight: number;
+  }>;
+  graphRelations: Array<{
+    id: string;
+    source: string;
+    target: string;
+    relation: string;
+  }>;
+  subprocessorChains: Array<{
+    explanation: string;
+    hops: number;
+  }>;
+  statutoryCitations: string[];
+}
+
+export function queryGraphRAGApi(query: string, vendorId?: string): Promise<GraphRAGResult> {
+  return post<GraphRAGResult>('/api/rag/query', { query, vendorId });
+}
+
+export interface TrainingStatus {
+  status: string;
+  activePolicy: string;
+  metrics: {
+    grounding_accuracy_percent: number;
+    flaw_recall_f1_percent: number;
+    strict_json_syntax_percent: number;
+    mean_composite_reward: number;
+    benchmark_test_cases?: number;
+  };
+  baselineComparison?: {
+    base_model_qwen_7b: {
+      grounding_accuracy: string;
+      flaw_recall_f1: string;
+      strict_json_syntax: string;
+    };
+    after_sft: {
+      grounding_accuracy: string;
+      flaw_recall_f1: string;
+      strict_json_syntax: string;
+    };
+    after_grpo_rlvr: {
+      grounding_accuracy: string;
+      flaw_recall_f1: string;
+      strict_json_syntax: string;
+    };
+  };
+  lastTrained?: string;
+}
+
+export async function getTrainingStatus(): Promise<TrainingStatus> {
+  const res = await fetch('/api/train/status');
+  if (!res.ok) throw new Error(`Training status failed (${res.status})`);
+  return res.json();
+}
+

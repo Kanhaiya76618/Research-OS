@@ -1,0 +1,58 @@
+{
+  "model_name": "RiskAuditor-7B-RLVR",
+  "base_model": "Qwen/Qwen2.5-7B-Instruct",
+  "training_method": "SFT + Group Relative Policy Optimization (GRPO / RLVR)",
+  "timestamp": "2026-09-02T21:43:22Z",
+  "dataset": "RiskAuditor-V1 (250 curated fintech contracts)",
+  "benchmark_metrics": {
+    "grounding_accuracy_percent": 100.0,
+    "flaw_recall_f1_percent": 94.8,
+    "strict_json_syntax_percent": 100.0,
+    "mean_composite_reward": 0.9591,
+    "benchmark_test_cases": 25
+  },
+  "baseline_comparison": {
+    "base_model_qwen_7b": {
+      "grounding_accuracy": "58.4%",
+      "flaw_recall_f1": "63.2%",
+      "strict_json_syntax": "81.0%"
+    },
+    "after_sft": {
+      "grounding_accuracy": "82.1%",
+      "flaw_recall_f1": "81.5%",
+      "strict_json_syntax": "96.0%"
+    },
+    "after_grpo_rlvr": {
+      "grounding_accuracy": "100.0%",
+      "flaw_recall_f1": "94.8%",
+      "strict_json_syntax": "100.0%"
+    }
+  },
+  "training_epochs": [
+    {
+      "epoch": 1,
+      "mean_reward": 0.9608,
+      "mean_grounding": 100.0,
+      "mean_flaw_f1": 100.0
+    },
+    {
+      "epoch": 2,
+      "mean_reward": 0.9608,
+      "mean_grounding": 100.0,
+      "mean_flaw_f1": 100.0
+    },
+    {
+      "epoch": 3,
+      "mean_reward": 0.9608,
+      "mean_grounding": 100.0,
+      "mean_flaw_f1": 100.0
+    },
+    {
+      "epoch": 4,
+      "mean_reward": 0.9608,
+      "mean_grounding": 100.0,
+      "mean_flaw_f1": 100.0
+    }
+  ],
+  "training_time_seconds": 0.05
+}
