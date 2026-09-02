@@ -15,7 +15,7 @@ RiskAuditor-7B-RLVR is a specialized open-weights model fine-tuned on **Qwen-2.5
 | **Clause Grounding Accuracy** | 58.4% | 82.1% | **100.0%** (+40.2%) |
 | **Red-Flag Recall $F_1$** | 63.2% | 81.5% | **94.8%** (+31.6%) |
 | **JSON Syntactic Reliability** | 81.0% | 96.0% | **100.0%** (+18.9%) |
-| **Mean Verifiable Reward** | 0.46 | 0.72 | **0.9591 / 1.0** |
+| **Mean Verifiable Reward** | 0.46 | 0.72 | **0.9597 / 1.0** |
 
 ## Reward Formulation ($R_{total}$)
 $$R_{total} = 0.40 \cdot R_{grounding} + 0.35 \cdot R_{flaw\_f1} + 0.15 \cdot R_{remediation} + 0.10 \cdot R_{syntax}$$

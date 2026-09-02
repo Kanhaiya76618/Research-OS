@@ -11,4 +11,8 @@ coverage/
 __pycache__/
 *.py[cod]
 *$py.class
+*.safetensors
+*.bin
+*.zip
+
 

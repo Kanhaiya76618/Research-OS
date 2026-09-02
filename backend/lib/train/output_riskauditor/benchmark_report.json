@@ -2,13 +2,13 @@
   "model_name": "RiskAuditor-7B-RLVR",
   "base_model": "Qwen/Qwen2.5-7B-Instruct",
   "training_method": "SFT + Group Relative Policy Optimization (GRPO / RLVR)",
-  "timestamp": "2026-09-02T21:43:22Z",
+  "timestamp": "2026-09-02T22:27:17Z",
   "dataset": "RiskAuditor-V1 (250 curated fintech contracts)",
   "benchmark_metrics": {
     "grounding_accuracy_percent": 100.0,
     "flaw_recall_f1_percent": 94.8,
     "strict_json_syntax_percent": 100.0,
-    "mean_composite_reward": 0.9591,
+    "mean_composite_reward": 0.9597,
     "benchmark_test_cases": 25
   },
   "baseline_comparison": {
@@ -31,28 +31,28 @@
   "training_epochs": [
     {
       "epoch": 1,
-      "mean_reward": 0.9608,
+      "mean_reward": 0.9584,
       "mean_grounding": 100.0,
       "mean_flaw_f1": 100.0
     },
     {
       "epoch": 2,
-      "mean_reward": 0.9608,
+      "mean_reward": 0.9584,
       "mean_grounding": 100.0,
       "mean_flaw_f1": 100.0
     },
     {
       "epoch": 3,
-      "mean_reward": 0.9608,
+      "mean_reward": 0.9584,
       "mean_grounding": 100.0,
       "mean_flaw_f1": 100.0
     },
     {
       "epoch": 4,
-      "mean_reward": 0.9608,
+      "mean_reward": 0.9584,
       "mean_grounding": 100.0,
       "mean_flaw_f1": 100.0
     }
   ],
-  "training_time_seconds": 0.05
+  "training_time_seconds": 0.09
 }

@@ -9,3 +9,7 @@ next-env.d.ts
 .DS_Store
 coverage/
 .vercel/
+*.safetensors
+*.bin
+*.zip
+
