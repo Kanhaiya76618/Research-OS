@@ -9,9 +9,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'ResearchOS — AI-Native Research Operating System',
+  title: 'RiskOS by Razorpay — Autonomous AI Risk Manager (Track 2)',
   description:
-    'ResearchOS generates structured reading curricula, critiques coverage gaps, and maps your knowledge graph — turning any research topic into a navigable learning system.',
+    'Autonomous multi-agent counterparty intelligence, 4-tier due diligence, contract red-flag audits with 100% verifiable clause grounding, and automated RazorpayX escrow defense.',
   icons: {
     icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
   },
