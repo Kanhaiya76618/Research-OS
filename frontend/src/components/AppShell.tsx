@@ -5,7 +5,6 @@ import TopNav from './TopNav';
 import Sidebar from './Sidebar';
 import Dock from './Dock';
 import HelpAssistant from './HelpAssistant';
-import StudyTools from './StudyTools';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -73,9 +72,6 @@ export default function AppShell({ children, topic, agentStatus = 'idle', bounci
 
         {/* Floating AI Help Assistant */}
         <HelpAssistant />
-
-        {/* Floating Study / Audit Tools */}
-        <StudyTools />
       </div>
     </div>
   );
