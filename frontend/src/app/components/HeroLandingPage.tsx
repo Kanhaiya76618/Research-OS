@@ -27,6 +27,7 @@ import {
   Activity,
   Award,
   BookOpen,
+  UploadCloud,
 } from 'lucide-react';
 
 /* -------------------------------------------------------------------------- */
@@ -337,6 +338,9 @@ export default function HeroLandingPage() {
 
       {/* Section 6: Statutory Compliance Badges */}
       <ComplianceBadges />
+
+      {/* Section 7: Bottom CTA Banner (Matching User's Reference Image) */}
+      <BottomCtaBanner />
     </div>
   );
 }
@@ -598,3 +602,131 @@ export function ComplianceBadges() {
     </section>
   );
 }
+
+/* -------------------------------------------------------------------------- */
+/* Section 7: Bottom CTA Banner Component (Exact Match to User Screenshot)    */
+/* -------------------------------------------------------------------------- */
+export function BottomCtaBanner() {
+  return (
+    <section className="w-full py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div
+        className="relative rounded-[28px] overflow-hidden p-8 sm:p-12 lg:p-14 text-white shadow-2xl"
+        style={{
+          background: 'linear-gradient(135deg, #091a30 0%, #0c2340 45%, #18386b 100%)',
+          boxShadow: '0 25px 50px -12px rgba(12, 35, 64, 0.35)',
+        }}
+      >
+        {/* Subtle Ambient Radial Glow */}
+        <div
+          className="absolute -top-24 -right-24 w-96 h-96 rounded-full pointer-events-none opacity-25"
+          style={{
+            background: 'radial-gradient(circle, #38bdf8 0%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+        />
+
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column: Heading, Subtext & 3 Bottom Metrics */}
+          <div className="lg:col-span-7 flex flex-col justify-between">
+            <div>
+              {/* Eyebrow Pill */}
+              <div className="flex items-center gap-2 text-[11px] font-mono font-bold tracking-wider text-emerald-400 uppercase mb-4">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>9 AGENTS ACTIVE · SYSTEM READY</span>
+              </div>
+
+              {/* H2 Title */}
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-white tracking-tight leading-[1.12]">
+                Audit Your First Counterparty Contract Today.
+              </h2>
+
+              {/* Subtext */}
+              <p className="text-sm sm:text-base text-slate-300 font-normal mt-4 leading-relaxed max-w-xl">
+                Upload any vendor MSA, DPA, or SOC2 disclosure and receive a fully grounded, RBI-compliant risk dossier in under 4 minutes — with automated escrow triggers if needed.
+              </p>
+            </div>
+
+            {/* 3 Metrics Row (Exact Match) */}
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 mt-10 pt-6 border-t border-white/15">
+              <div>
+                <div className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
+                  &lt; 4 min
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-slate-400 mt-1">
+                  AUDIT TIME
+                </div>
+              </div>
+
+              <div>
+                <div className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
+                  ₹0
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-slate-400 mt-1">
+                  HALLUCINATION COST
+                </div>
+              </div>
+
+              <div>
+                <div className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight">
+                  100%
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-slate-400 mt-1">
+                  VERBATIM GROUNDING
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Floating Frosted Glass Card */}
+          <div className="lg:col-span-5 w-full">
+            <div
+              className="rounded-2xl p-6 sm:p-7 border border-white/20 shadow-2xl"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+              }}
+            >
+              {/* Card Header */}
+              <div className="flex items-center gap-2 text-white font-bold text-base mb-1">
+                <ShieldAlert size={18} className="text-sky-400" />
+                <span>Start Risk Audit</span>
+              </div>
+              <p className="text-xs text-slate-300 mb-5">
+                Upload MSA, DPA, or SOC2 · Supports PDF, DOCX, TXT
+              </p>
+
+              {/* Buttons */}
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/paper-reader"
+                  className="w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#0c2340] hover:bg-[#07192f] border border-white/20 flex items-center justify-center gap-2 shadow-lg transition-all active:scale-98"
+                >
+                  <UploadCloud size={16} className="text-sky-400" />
+                  <span>Audit a Counterparty Contract</span>
+                </Link>
+
+                <Link
+                  href="/curriculum-view#graph"
+                  className="w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-[#0c2340] bg-white hover:bg-slate-100 flex items-center justify-center gap-2 shadow-md transition-all active:scale-98"
+                >
+                  <Network size={16} className="text-[#0284c7]" />
+                  <span>Explore GraphRAG Supply Chain</span>
+                </Link>
+              </div>
+
+              {/* Security Micro Caption */}
+              <div className="mt-4 text-center">
+                <span className="text-[10px] font-mono text-slate-300/80 flex items-center justify-center gap-1.5">
+                  <Lock size={11} className="text-slate-300" />
+                  <span>Zero-knowledge · Encrypted at rest · DPDP 2023 compliant</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
