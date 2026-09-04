@@ -26,36 +26,31 @@ import {
 } from 'lucide-react';
 
 /* -------------------------------------------------------------------------- */
-/* Section 1: Glassmorphic Top Navbar (Pure Static)                           */
+/* Section 1: Glassmorphic Top Navbar (Exact Match to User Screenshot)        */
 /* -------------------------------------------------------------------------- */
 export function GlassNavbar() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-md border-b border-slate-200/80 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between gap-4">
-        {/* Brand Logo with Glowing Shield Icon */}
-        <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0c2340] via-[#0284c7] to-[#0d9488] p-[1.5px] shadow-sm transition-transform duration-200 group-hover:scale-105">
+    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        {/* Brand Logo matching reference: Shield icon + RiskOS + BY RAZORPAY */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[#0c2340] via-[#0284c7] to-[#059669] p-[1.5px] shadow-sm transition-transform duration-200 group-hover:scale-105">
             <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-              <ShieldCheck className="w-6 h-6 text-[#0284c7]" />
+              <ShieldCheck className="w-5 h-5 text-[#0284c7]" />
             </div>
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-lg tracking-tight text-[#0c2340] leading-none">
-                RiskOS
-              </span>
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-sky-100 text-[#0284c7] border border-sky-200">
-                by Razorpay
-              </span>
-            </div>
-            <span className="text-[9px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
-              TRACK 2: AI RISK MANAGER
+            <span className="font-extrabold text-[19px] tracking-tight text-[#0c2340] leading-none">
+              RiskOS
+            </span>
+            <span className="text-[8.5px] font-extrabold tracking-[0.2em] text-[#0284c7] uppercase mt-0.5">
+              BY RAZORPAY
             </span>
           </div>
         </Link>
 
-        {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-semibold text-slate-600">
+        {/* Center Nav Links: Workstations, GraphRAG, Benchmarks, Compliance, Architecture */}
+        <nav className="hidden md:flex items-center gap-7 lg:gap-9 text-xs font-semibold text-slate-600">
           <a
             href="#workstations"
             className="hover:text-[#0c2340] transition-colors duration-150"
@@ -66,19 +61,19 @@ export function GlassNavbar() {
             href="#graphrag"
             className="hover:text-[#0c2340] transition-colors duration-150"
           >
-            GraphRAG Intelligence
+            GraphRAG
           </a>
           <a
             href="#benchmarks"
             className="hover:text-[#0c2340] transition-colors duration-150"
           >
-            Model Benchmarks
+            Benchmarks
           </a>
           <a
             href="#compliance"
             className="hover:text-[#0c2340] transition-colors duration-150"
           >
-            Regulatory Engine
+            Compliance
           </a>
           <a
             href="#architecture"
@@ -88,23 +83,20 @@ export function GlassNavbar() {
           </a>
         </nav>
 
-        {/* Right Status Indicator & Claymorphic Primary CTA */}
+        {/* Right side: Pill with green dot + 'Launch Workstation' pill button */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* Static green pulse dot with policy label */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-xs">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#059669]" />
-            </span>
-            <span className="text-[11px] font-mono font-medium text-slate-700">
-              9 Agents Active · <span className="font-semibold text-[#0c2340]">RiskAuditor-7B (LoRA + GRPO)</span>
+          {/* Status pill: 9 Agents Active · RiskAuditor-7B */}
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#059669]" />
+            <span className="text-xs font-medium text-slate-700 font-mono">
+              9 Agents Active · <span className="font-semibold text-[#0c2340]">RiskAuditor-7B</span>
             </span>
           </div>
 
-          {/* Primary Claymorphic CTA Button */}
+          {/* Primary Pill Button: Launch Workstation */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-[#1e3a8a] hover:bg-[#0c2340] rounded-xl shadow-md transition-all duration-200 active:scale-95 hover:shadow-lg"
+            className="flex items-center justify-center px-5 py-2 text-xs font-bold text-white bg-[#0c2340] hover:bg-[#1e3a8a] rounded-full shadow-md transition-all duration-200 active:scale-95 hover:shadow-lg"
           >
             <span>Launch Workstation</span>
           </Link>
