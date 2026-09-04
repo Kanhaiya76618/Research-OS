@@ -692,6 +692,9 @@ export function ComplianceBadges() {
 export default function HeroLandingPage() {
   return (
     <div className="relative w-full overflow-hidden">
+      {/* Section 1: Top Glassmorphic Navigation Bar */}
+      <GlassNavbar />
+
       {/* Background Radial Glows & Grid Pattern */}
       <div className="absolute inset-0 pointer-events-none bg-grid-pattern opacity-60 z-0" />
       <div
