@@ -7,21 +7,22 @@ import { ClipboardCheck, AlertTriangle, Loader2, ListOrdered, ShieldCheck, Targe
 import { planExperiment, type ExperimentPlan } from '@/lib/api';
 import { getStudentId } from '@/lib/studentId';
 
-function BulletSection({ icon: Icon, color, title, items }: {
+function BulletSection({ icon: Icon, color, title, items = [] }: {
   icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
   color: string;
   title: string;
-  items: string[];
+  items?: string[];
 }) {
+  const safeItems = Array.isArray(items) ? items : [];
   return (
     <div className="clay-card p-5" style={{ background: 'rgba(255,255,255,0.88)' }}>
       <div className="flex items-center gap-2 mb-2.5">
         <Icon size={15} style={{ color } as React.CSSProperties} />
         <span className="text-xs font-bold text-[#0c2340]">{title}</span>
       </div>
-      {items.length > 0 ? (
+      {safeItems.length > 0 ? (
         <ul className="space-y-2">
-          {items.map((item, i) => (
+          {safeItems.map((item, i) => (
             <li key={i} className="text-xs text-[#334155] leading-relaxed flex gap-2 font-medium">
               <span className="font-bold shrink-0" style={{ color }}>&bull;</span>
               {item}
@@ -152,84 +153,107 @@ export default function PreFlightPage() {
         )}
 
         <AnimatePresence>
-          {plan && (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="space-y-4"
-            >
-              {/* Historical Incident Echo Warnings */}
-              {plan.archiveWarnings && plan.archiveWarnings.length > 0 && (
-                <motion.div
-                  initial={{ scale: 0.97 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  role="alert"
-                  className="rounded-2xl p-5"
-                  style={{
-                    background: 'rgba(220,38,38,0.08)',
-                    border: '2px solid rgba(220,38,38,0.4)',
-                    boxShadow: '0 8px 32px rgba(220,38,38,0.12)',
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle size={17} className="text-[#dc2626]" />
-                    <span className="text-sm font-bold text-[#dc2626]">
-                      Historical Default Pattern Detected:
-                    </span>
-                  </div>
-                  <ul className="space-y-1.5">
-                    {plan.archiveWarnings.map((w, i) => (
-                      <li key={i} className="text-xs text-[#7a1d1d] leading-relaxed font-semibold flex gap-2">
-                        <span className="text-[#dc2626] font-bold shrink-0">&bull;</span>
-                        {w}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
+          {plan && (() => {
+            const archiveWarnings =
+              (Array.isArray(plan.archiveWarnings) && plan.archiveWarnings) ||
+              (Array.isArray((plan as any).archiveEchoWarnings) && (plan as any).archiveEchoWarnings) ||
+              [];
+            const prereqGaps =
+              (Array.isArray(plan.prereqGaps) && plan.prereqGaps) ||
+              (Array.isArray((plan as any).complianceGaps) && (plan as any).complianceGaps) ||
+              [];
+            const milestones =
+              (Array.isArray(plan.milestones) && plan.milestones) ||
+              (Array.isArray((plan as any).onboardingMilestones) && (plan as any).onboardingMilestones) ||
+              [];
+            const controls =
+              (Array.isArray(plan.controls) && plan.controls) ||
+              (Array.isArray((plan as any).enforceableControls) && (plan as any).enforceableControls) ||
+              [];
+            const successCriteria =
+              (Array.isArray(plan.successCriteria) && plan.successCriteria) ||
+              (Array.isArray((plan as any).slaSuccessCriteria) && (plan as any).slaSuccessCriteria) ||
+              [];
 
-              {/* Diligence Prerequisite Gaps */}
-              {plan.prereqGaps && plan.prereqGaps.length > 0 && (
-                <div
-                  className="clay-card p-5"
-                  style={{
-                    background: 'rgba(2,132,199,0.06)',
-                    border: '1px solid rgba(2,132,199,0.25)',
-                    borderLeft: '4px solid #0284c7',
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <Layers size={15} className="text-[#0284c7]" />
-                    <span className="text-xs font-bold text-[#0c2340]">Missing Due Diligence Prerequisites</span>
-                  </div>
-                  <ul className="space-y-1.5 mb-3">
-                    {plan.prereqGaps.map((g, i) => (
-                      <li key={i} className="text-xs text-[#1e293b] leading-relaxed flex gap-2 font-medium">
-                        <span className="text-[#0284c7] font-bold shrink-0">&bull;</span>
-                        {g}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/curriculum-view"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#0284c7] hover:text-[#0c2340] transition-colors"
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="space-y-4"
+              >
+                {/* Historical Incident Echo Warnings */}
+                {archiveWarnings.length > 0 && (
+                  <motion.div
+                    initial={{ scale: 0.97 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    role="alert"
+                    className="rounded-2xl p-5"
+                    style={{
+                      background: 'rgba(220,38,38,0.08)',
+                      border: '2px solid rgba(220,38,38,0.4)',
+                      boxShadow: '0 8px 32px rgba(220,38,38,0.12)',
+                    }}
                   >
-                    Open Due Diligence Trail <ArrowRight size={12} />
-                  </Link>
-                </div>
-              )}
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle size={17} className="text-[#dc2626]" />
+                      <span className="text-sm font-bold text-[#dc2626]">
+                        Historical Default Pattern Detected:
+                      </span>
+                    </div>
+                    <ul className="space-y-1.5">
+                      {archiveWarnings.map((w: string, i: number) => (
+                        <li key={i} className="text-xs text-[#7a1d1d] leading-relaxed font-semibold flex gap-2">
+                          <span className="text-[#dc2626] font-bold shrink-0">&bull;</span>
+                          {w}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
 
-              <BulletSection icon={ListOrdered} color="#0284c7" title="Onboarding Milestones & SLA Gates" items={plan.milestones} />
-              <BulletSection icon={ShieldCheck} color="#0d9488" title="Enforceable Audit Controls & Escrow Rules" items={plan.controls} />
-              <BulletSection icon={Target} color="#1e3a8a" title="Falsifiable Onboarding Acceptance Criteria" items={plan.successCriteria} />
+                {/* Diligence Prerequisite Gaps */}
+                {prereqGaps.length > 0 && (
+                  <div
+                    className="clay-card p-5"
+                    style={{
+                      background: 'rgba(2,132,199,0.06)',
+                      border: '1px solid rgba(2,132,199,0.25)',
+                      borderLeft: '4px solid #0284c7',
+                    }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Layers size={15} className="text-[#0284c7]" />
+                      <span className="text-xs font-bold text-[#0c2340]">Missing Due Diligence Prerequisites</span>
+                    </div>
+                    <ul className="space-y-1.5 mb-3">
+                      {prereqGaps.map((g: string, i: number) => (
+                        <li key={i} className="text-xs text-[#1e293b] leading-relaxed flex gap-2 font-medium">
+                          <span className="text-[#0284c7] font-bold shrink-0">&bull;</span>
+                          {g}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href="/curriculum-view"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#0284c7] hover:text-[#0c2340] transition-colors"
+                    >
+                      Open Due Diligence Trail <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                )}
 
-              <p className="text-[10px] font-mono text-[#94a3b8] pt-2">
-                Plan audited: {new Date(plan.createdAt).toLocaleString()}
-              </p>
-            </motion.div>
-          )}
+                <BulletSection icon={ListOrdered} color="#0284c7" title="Onboarding Milestones & SLA Gates" items={milestones} />
+                <BulletSection icon={ShieldCheck} color="#0d9488" title="Enforceable Audit Controls & Escrow Rules" items={controls} />
+                <BulletSection icon={Target} color="#1e3a8a" title="Falsifiable Onboarding Acceptance Criteria" items={successCriteria} />
+
+                <p className="text-[10px] font-mono text-[#94a3b8] pt-2">
+                  Plan audited: {plan.createdAt ? new Date(plan.createdAt).toLocaleString() : new Date().toLocaleString()}
+                </p>
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
       </div>
     </AppShell>
