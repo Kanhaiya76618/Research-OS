@@ -106,6 +106,12 @@ ${verdicts}`;
     maxTokens: 2500,
     tier: 'heavy',
   });
-  return { ...report, generatedAt: new Date().toISOString() };
+  return {
+    ...report,
+    generatedAt: new Date().toISOString(),
+    consistencyNotes: report.crossModuleRiskSyntheses || [],
+    suggestions: report.mandatoryRemediations || [],
+    overallNarrative: report.croSignOffDirective || report.executiveSummary || '',
+  };
 }
 

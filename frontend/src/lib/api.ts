@@ -78,9 +78,14 @@ export interface PanelVerdict {
 }
 
 export interface SupervisorReport {
-  consistencyNotes: string[];
-  suggestions: string[];
-  overallNarrative: string;
+  executiveSummary?: string;
+  compositeRiskRating?: string;
+  crossModuleRiskSyntheses?: string[];
+  mandatoryRemediations?: string[];
+  croSignOffDirective?: string;
+  consistencyNotes?: string[];
+  suggestions?: string[];
+  overallNarrative?: string;
   generatedAt: string;
 }
 

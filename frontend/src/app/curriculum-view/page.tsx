@@ -39,11 +39,11 @@ export default function CurriculumViewPage() {
 
   return (
     <AppShell topic="CloudGate Infrastructure Due Diligence" agentStatus="done">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col min-h-full">
         {/* View switcher with claymorphism pill tabs */}
         <div
-          className="flex items-center justify-between px-6 py-2.5 border-b"
-          style={{ borderColor: 'rgba(12,35,64,0.06)', background: 'rgba(255,255,255,0.75)' }}
+          className="sticky top-0 z-20 flex items-center justify-between px-6 py-2.5 border-b backdrop-blur-md"
+          style={{ borderColor: 'rgba(12,35,64,0.06)', background: 'rgba(255,255,255,0.85)' }}
         >
           <div className="flex items-center gap-1.5">
             {[
@@ -87,18 +87,18 @@ export default function CurriculumViewPage() {
           </div>
         </div>
 
-        {/* Main layout */}
-        <div className="flex flex-1 overflow-hidden">
+        {/* Main layout with free scroll on left and sticky sidebar on right */}
+        <div className="flex flex-1 min-h-0">
           {viewMode === 'curriculum' ? (
             <>
               {/* Left: Diligence Trail Board */}
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 min-w-0 pb-20">
                 <CurriculumBoard />
               </div>
 
               {/* Right sidebar */}
               <div
-                className="w-80 shrink-0 overflow-y-auto scrollbar-thin p-4 space-y-4 border-l"
+                className="w-80 shrink-0 p-4 space-y-4 border-l sticky top-12 self-start max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-thin"
                 style={{ borderColor: 'rgba(12,35,64,0.06)', background: 'rgba(255,255,255,0.45)' }}
               >
                 <CoverageMeter />
@@ -108,7 +108,7 @@ export default function CurriculumViewPage() {
               </div>
             </>
           ) : (
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 h-[calc(100vh-7rem)] overflow-hidden">
               <KnowledgeGraphView />
             </div>
           )}

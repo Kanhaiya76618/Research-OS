@@ -316,15 +316,15 @@ export default function DashboardPage() {
                     CRO Official Sign-Off Directive
                   </span>
                   <span className="px-2.5 py-1 rounded-full text-[11px] font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300">
-                    APPROVED WITH MITIGATION
+                    {report.compositeRiskRating || 'APPROVED WITH MITIGATION'}
                   </span>
                 </div>
                 <p className="text-xs leading-relaxed text-[#334155] font-medium mb-3">
-                  {report.overallNarrative}
+                  {report.croSignOffDirective || report.overallNarrative || report.executiveSummary || 'Executive risk analysis synthesized.'}
                 </p>
                 <div className="flex items-center gap-1.5 text-[11px] text-[#64748b] font-mono">
                   <CheckCircle size={12} className="text-[#059669]" />
-                  <span>Dossier signed at {report.generatedAt}</span>
+                  <span>Dossier signed at {report.generatedAt ? new Date(report.generatedAt).toLocaleString() : new Date().toLocaleString()}</span>
                 </div>
               </div>
 
@@ -334,9 +334,9 @@ export default function DashboardPage() {
                   <AlertTriangle size={15} className="text-[#d97706]" />
                   <span className="text-xs font-bold text-[#0c2340]">Cross-Module Risk Syntheses</span>
                 </div>
-                {report.consistencyNotes.length > 0 ? (
+                {(report.crossModuleRiskSyntheses || report.consistencyNotes || []).length > 0 ? (
                   <ul className="space-y-2">
-                    {report.consistencyNotes.map((n, i) => (
+                    {(report.crossModuleRiskSyntheses || report.consistencyNotes || []).map((n, i) => (
                       <li key={i} className="text-xs text-[#334155] leading-relaxed flex gap-2 font-medium">
                         <span className="text-[#d97706] font-bold shrink-0">&bull;</span>
                         {n}
@@ -348,15 +348,15 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              {/* Suggestions */}
+              {/* Suggestions / Mandatory Remediations */}
               <div className="clay-card p-5" style={{ background: 'rgba(255,255,255,0.88)', borderLeft: '4px solid #059669' }}>
                 <div className="flex items-center gap-2 mb-2.5">
                   <Lightbulb size={15} className="text-[#059669]" />
                   <span className="text-xs font-bold text-[#0c2340]">Mandatory Risk Mitigation Directives</span>
                 </div>
-                {report.suggestions.length > 0 ? (
+                {(report.mandatoryRemediations || report.suggestions || []).length > 0 ? (
                   <ul className="space-y-2">
-                    {report.suggestions.map((s, i) => (
+                    {(report.mandatoryRemediations || report.suggestions || []).map((s, i) => (
                       <li key={i} className="text-xs text-[#334155] leading-relaxed flex gap-2 font-medium">
                         <span className="text-[#059669] font-bold shrink-0">&bull;</span>
                         {s}

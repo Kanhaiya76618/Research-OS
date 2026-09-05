@@ -155,7 +155,7 @@ export default function CurriculumBoard() {
   const currentPath = path || DEFAULT_SAMPLE_TRAIL;
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
+    <div className="w-full p-6">
       {/* Header stats banner */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="clay-card p-4 flex items-center gap-3">
