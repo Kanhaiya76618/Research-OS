@@ -34,20 +34,11 @@ Respond ONLY with JSON:
 
 export async function synthesize(vendorOrStudentId: string): Promise<CroExecutiveMemo> {
   const rec = getFullStudentRecord(vendorOrStudentId);
-  const hasUserData =
-    rec.learningPaths.length > 0 ||
-    rec.critiques.length > 0 ||
-    rec.archiveEntries.length > 0 ||
-    rec.plans.length > 0 ||
-    rec.reviewGrades.length > 0 ||
-    rec.panelVerdicts.length > 0;
 
   const paths = rec.learningPaths.length
     ? rec.learningPaths
         .map((lp: any) => `Target: ${lp.targetVendor || lp.targetTitle}\nTiers/Nodes: ${(lp.nodes || []).map((n: any) => n.title).join('; ')}`)
         .join('\n\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Target: CloudGate Infrastructure / Nexora Cloud (Primary Cloud Vendor)\nTiers/Nodes: Tier 1: MCA-21 Corporate Integrity & GSTIN Circular Validation; Tier 2: SOC2 Type II & CERT-In Audit; Tier 3: Subprocessor Dependency Graph & Offshore Indexing Clusters; Tier 4: Financial Runway & RazorpayX Automated Escrow Lock';
 
   const critiques = rec.critiques.length
@@ -59,16 +50,12 @@ export async function synthesize(vendorOrStudentId: string): Promise<CroExecutiv
               .join(' | ')}`
         )
         .join('\n\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Summary: CloudGate Master Services Agreement (MSA v3.2) Audit\nFlags: subprocessor_risk (critical): "Vendor may outsource asynchronous database indexing to affiliated regional compute clusters outside India." | liability_evasion (critical): "Vendor cumulative liability for data breach or loss is capped at one month of platform fees paid." | regulatory_gap (high): "Missing mandatory 72h CERT-In cyber incident disclosure addendum under DPDP Act 2023."';
 
   const archive = rec.archiveEntries.length
     ? rec.archiveEntries
         .map((e: any) => `Incident: ${e.attempted || e.vendorOrIncident} | Failure mode: ${e.failureMode} | Lesson: ${e.lesson}`)
         .join('\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Incident: SwiftDeliver Pvt Ltd (Q2 2024 Default) | Failure mode: Secret 4th-party offshore telemetry pipe caused regulatory freeze | Lesson: GraphRAG multi-hop traversal must verify subprocessor chain down to Tier 4 before contract execution.';
 
   const plans = rec.plans.length
@@ -78,16 +65,12 @@ export async function synthesize(vendorOrStudentId: string): Promise<CroExecutiv
             `Objective: ${p.vendorObjective || p.objective} | Archive warnings: ${(p.archiveEchoWarnings || p.archiveWarnings || []).length} | Gaps: ${(p.complianceGaps || p.prereqGaps || []).length}`
         )
         .join('\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Objective: Production Cloud Onboarding & Escrow Guard | Archive warnings: 2 (offshore indexing leak, 1-month fee cap) | Gaps: 1 (DPDP 2023 Statutory Addendum required)';
 
   const reviews = rec.reviewGrades.length
     ? rec.reviewGrades
         .map((g: any) => `Score: ${g.score} | Missed flaws: ${(g.missed || []).length}`)
         .join('\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Score: 96/100 (Auditor Dojo Simulation Passed) | Missed flaws: 0';
 
   const verdicts = rec.panelVerdicts.length
@@ -97,8 +80,6 @@ export async function synthesize(vendorOrStudentId: string): Promise<CroExecutiv
             `Verdict: ${v.verdict} | Objections: ${(v.objections || []).length} | Stipulations: ${(v.mandatoryStipulations || []).join('; ')}`
         )
         .join('\n')
-    : hasUserData
-    ? '(none yet)'
     : 'Verdict: Approved With Conditional Escrow | Objections: 2 (Legal Skeptic & InfoSec Skeptic on subprocessor leak) | Stipulations: RazorpayX 15% rolling reserve escrow hold; DPDP 2023 liability rider';
 
   const user = `DILIGENCE VERIFICATION TRAILS:
@@ -120,12 +101,20 @@ ${reviews}
 ${verdicts}`;
 
   try {
-    const report = await callClaudeJSON<Omit<CroExecutiveMemo, 'generatedAt'>>({
-      system: SYSTEM,
-      user,
-      maxTokens: 2500,
-      tier: 'heavy',
-    });
+    // 6-second timeout race to prevent proxy disconnects
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('LLM call timed out after 6000ms')), 6000)
+    );
+
+    const report = await Promise.race([
+      callClaudeJSON<Omit<CroExecutiveMemo, 'generatedAt'>>({
+        system: SYSTEM,
+        user,
+        maxTokens: 2500,
+        tier: 'heavy',
+      }),
+      timeoutPromise,
+    ]);
 
     return {
       executiveSummary: report.executiveSummary || 'Multi-agent counterparty due diligence synthesized across all 9 RiskOS specialized agents.',
