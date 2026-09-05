@@ -14,5 +14,7 @@ __pycache__/
 *.safetensors
 *.bin
 *.zip
+data/*.json
+!data/.gitkeep
 
 

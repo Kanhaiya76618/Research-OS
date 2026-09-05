@@ -315,7 +315,15 @@ export default function DashboardPage() {
                   <span className="text-xs font-bold text-[#0c2340] uppercase tracking-wide">
                     CRO Official Sign-Off Directive
                   </span>
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <span
+                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-mono border ${
+                      (report.compositeRiskRating || '').includes('Critical') || (report.compositeRiskRating || '').includes('Rejected')
+                        ? 'bg-red-100 text-red-800 border-red-300'
+                        : (report.compositeRiskRating || '').includes('Moderate') || (report.compositeRiskRating || '').includes('Conditional')
+                        ? 'bg-amber-100 text-amber-800 border-amber-300'
+                        : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                    }`}
+                  >
                     {report.compositeRiskRating || 'APPROVED WITH MITIGATION'}
                   </span>
                 </div>
